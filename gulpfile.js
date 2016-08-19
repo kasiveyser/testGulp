@@ -15,12 +15,12 @@ var gulp = require('gulp'),
 	reload = browserSync.reload;
 
 var path = {
-	gh-pages: { //Тут мы укажем куда складывать готовые после сборки файлы
-		html: 'gh-pages/',
-		js: 'gh-pages/js/',
-		css: 'gh-pages/css/',
-		img: 'gh-pages/img/',
-		fonts: 'gh-pages/fonts/'
+	build: { //Тут мы укажем куда складывать готовые после сборки файлы
+		html: 'build/',
+		js: 'build/js/',
+		css: 'build/css/',
+		img: 'build/img/',
+		fonts: 'build/fonts/'
 	},
 	src: { //Пути откуда брать исходники
 		html: 'src/*.html', //Синтаксис src/*.html говорит gulp что мы хотим взять все файлы с расширением .html
@@ -36,12 +36,12 @@ var path = {
 		img: 'src/img/**/*.*',
 		fonts: 'src/fonts/**/*.*'
 	},
-	clean: './gh-pages'
+	clean: './build'
 };
 
 var config = {
 	server: {
-		baseDir: "./gh-pages"
+		baseDir: "./build"
 	},
 	tunnel: true,
 	host: 'localhost',
@@ -49,35 +49,35 @@ var config = {
 	logPrefix: "Frontend_Devil"
 };
 
-gulp.task('html:gh-pages', function () {
+gulp.task('html:build', function () {
 	gulp.src(path.src.html) //Выберем файлы по нужному пути
 		.pipe(rigger()) //Прогоним через rigger
-		.pipe(gulp.dest(path.gh-pages.html)) //Выплюнем их в папку gh-pages
+		.pipe(gulp.dest(path.build.html)) //Выплюнем их в папку build
 		.pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
 });
 
-gulp.task('js:gh-pages', function () {
+gulp.task('js:build', function () {
     gulp.src(path.src.js) //Найдем наш main файл
         .pipe(rigger()) //Прогоним через rigger
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(uglify()) //Сожмем наш js
         .pipe(sourcemaps.write()) //Пропишем карты
-        .pipe(gulp.dest(path.gh-pages.js)) //Выплюнем готовый файл в gh-pages
+        .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
         .pipe(reload({stream: true})); //И перезагрузим сервер
 });
 
-gulp.task('style:gh-pages', function () {
+gulp.task('style:build', function () {
     gulp.src(path.src.style) //Выберем наш main.scss
         .pipe(sourcemaps.init()) //То же самое что и с js
         .pipe(sass()) //Скомпилируем
         .pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(cssmin()) //Сожмем
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.gh-pages.css)) //И в gh-pages
+        .pipe(gulp.dest(path.build.css)) //И в build
         .pipe(reload({stream: true}));
 });
 
-gulp.task('image:gh-pages', function () {
+gulp.task('image:build', function () {
     gulp.src(path.src.img) //Выберем наши картинки
         .pipe(imagemin({ //Сожмем их
             progressive: true,
@@ -85,38 +85,38 @@ gulp.task('image:gh-pages', function () {
             use: [pngquant()],
             interlaced: true
         }))
-        .pipe(gulp.dest(path.gh-pages.img)) //И бросим в gh-pages
+        .pipe(gulp.dest(path.build.img)) //И бросим в build
         .pipe(reload({stream: true}));
 });
 
-gulp.task('fonts:gh-pages', function() {
+gulp.task('fonts:build', function() {
     gulp.src(path.src.fonts)
-        .pipe(gulp.dest(path.gh-pages.fonts))
+        .pipe(gulp.dest(path.build.fonts))
 });
 
-gulp.task('gh-pages', [
-    'html:gh-pages',
-    'js:gh-pages',
-    'style:gh-pages',
-    'fonts:gh-pages',
-    'image:gh-pages'
+gulp.task('build', [
+    'html:build',
+    'js:build',
+    'style:build',
+    'fonts:build',
+    'image:build'
 ]);
 
 gulp.task('watch', function(){
     watch([path.watch.html], function(event, cb) {
-        gulp.start('html:gh-pages');
+        gulp.start('html:build');
     });
     watch([path.watch.style], function(event, cb) {
-        gulp.start('style:gh-pages');
+        gulp.start('style:build');
     });
     watch([path.watch.js], function(event, cb) {
-        gulp.start('js:gh-pages');
+        gulp.start('js:build');
     });
     watch([path.watch.img], function(event, cb) {
-        gulp.start('image:gh-pages');
+        gulp.start('image:build');
     });
     watch([path.watch.fonts], function(event, cb) {
-        gulp.start('fonts:gh-pages');
+        gulp.start('fonts:build');
     });
 });
 
@@ -128,4 +128,4 @@ gulp.task('clean', function (cb) {
     rimraf(path.clean, cb);
 });
 
-gulp.task('default', ['gh-pages', 'webserver', 'watch']);
+gulp.task('default', ['build', 'webserver', 'watch']);
