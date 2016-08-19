@@ -1,0 +1,22 @@
+{
+  "name": "new",
+  "description": "first",
+  "main": "main.js",
+  "authors": [
+    "kasiveyser <kasiveyser@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "normalize.css": "*",
+    "jquery": "2.*"
+  }
+}
